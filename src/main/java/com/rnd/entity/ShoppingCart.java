@@ -19,6 +19,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@NamedQueries(value = {
+        @NamedQuery(name = "ShoppingCart.findAll", query = "select s from ShoppingCart s left join fetch s.cartItems item left join fetch item.product"),
+        @NamedQuery(name = "ShoppingCart.getById", query = "select s from ShoppingCart s left join fetch s.cartItems item left join fetch item.product where s.id=?1")})
 @Table(name = "shopping_cart")
 public class ShoppingCart extends PanacheEntityBase {
 
@@ -99,7 +102,7 @@ public class ShoppingCart extends PanacheEntityBase {
     }
 
     public static Uni<ShoppingCart> deleteProductFromCart(Long shoppingCartId, Long productId){
-        Uni<ShoppingCart> cart = findByShoppingCartId(shoppingCartId);
+        Uni<ShoppingCart> cart = findById(shoppingCartId);
         Uni<Set<ShoppingCartItem>> cartItems = cart
                 .chain(shoppingCart -> Mutiny.fetch(shoppingCart.cartItems))
                 .onFailure().recoverWithNull();
@@ -111,7 +114,7 @@ public class ShoppingCart extends PanacheEntityBase {
                 .asTuple();
         return Panache.withTransaction(() -> responseTuple.onItem()
                 .ifNotNull().transform(entity -> {
-                    if (entity.getItem1() == null || entity.getItem4() == null | entity.getItem3() == null){
+                    if (entity.getItem1() == null || entity.getItem4() == null || entity.getItem3() == null){
                         return null;
                     }
                     entity.getItem3().quantity--;

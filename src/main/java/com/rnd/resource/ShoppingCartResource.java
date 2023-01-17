@@ -37,4 +37,22 @@ public class ShoppingCartResource {
                 .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
                 .onItem().ifNull().continueWith(Response.ok().status(Response.Status.NOT_FOUND)::build);
     }
+
+    @GET
+    @Path("/{cartId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> detailCartById(@PathParam("cartId")Long cartId){
+        return ShoppingCart.findByShoppingCartId(cartId)
+                .onItem().ifNotNull().transform(cart -> Response.ok(cart).build())
+                .onItem().ifNull().continueWith(Response.ok().status(Response.Status.NOT_FOUND)::build);
+    }
+
+    @DELETE
+    @Path("/{cartId}/{productId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> removeProductFromCart(@PathParam("cartId")Long cartId, @PathParam("productId")Long productId){
+        return ShoppingCart.deleteProductFromCart(cartId, productId)
+                .onItem().ifNotNull().transform(cart -> Response.ok(cart).build())
+                .onItem().ifNull().continueWith(Response.ok().status(Response.Status.NOT_FOUND)::build);
+    }
 }
