@@ -1,0 +1,21 @@
+quarkus:
+  http:
+    port: 8081
+  log:
+    level: INFO
+#  hibernate-orm:
+#    database:
+#      generation: drop-and-create
+    log:
+      sql: true
+    dialect: org.hibernate.dialect.PostgreSQL10Dialect
+    jdbc:
+      timezone: UTC
+  datasource:
+    db-kind: postgresql
+    username: postgres
+    password: root
+    jdbc: false
+    reactive:
+      url : postgresql://localhost:5432/dbquarkus_pos
+      max-size: 20
