@@ -30,12 +30,10 @@ public class SearchRoleService implements QuarkusBase<SearchRoleRequest, BaseSea
                 .asTuple();
 
         return Panache.withTransaction(()-> responseUniTuples.onItem()
-                .ifNotNull().transform(entity -> {
-                    return BaseSearchResponse.builder()
-                            .data(entity.getItem1())
-                            .totalPages(entity.getItem2())
-                            .currentPage(entity.getItem3())
-                            .build();
-                }));
+                .ifNotNull().transform(entity -> BaseSearchResponse.builder()
+                        .data(entity.getItem1())
+                        .totalPages(entity.getItem2())
+                        .currentPage(entity.getItem3())
+                        .build()));
     }
 }
