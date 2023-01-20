@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseSearchRequest extends BaseRequest{
-    /** payload to search data **/
-    private Integer page;
-    private Integer size;
-    private String sortBy;
+public class BaseValidResponse extends BaseResponse{
+    private Long id;
+    private Boolean valid;
 }
