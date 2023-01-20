@@ -10,6 +10,7 @@ import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.WebApplicationException;
 
 @Slf4j
 @ApplicationScoped
@@ -27,9 +28,17 @@ public class DeleteRoleService implements QuarkusBase<BaseFindIdRequest, BaseVal
                 .asTuple();
 
         return Panache.withTransaction(() -> responseFromTuple
-                .onItem().ifNotNull().transform(entity -> BaseValidResponse.builder()
-                        .id(entity.getItem2().getId())
-                        .valid(entity.getItem1())
-                        .build()));
+                .onItem().ifNotNull().transform(entity -> {
+
+                    if (entity.getItem1() == null || entity.getItem2() == null){
+                        log.info("error because id={} not found",request.getId());
+                        throw new WebApplicationException("sorry failed delete roles because id not found ",404);
+                    }
+
+                    return BaseValidResponse.builder()
+                            .id(entity.getItem2().getId())
+                            .valid(entity.getItem1())
+                            .build();
+                }));
     }
 }

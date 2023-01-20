@@ -28,7 +28,6 @@ public class SearchRoleService implements QuarkusBase<SearchRoleRequest, BaseSea
         Uni<Tuple3<List<Roles>, Long, Integer>> responseUniTuples = Uni.combine()
                 .all().unis(rolesListUni, roleCountUni, roleCurrentPageUni)
                 .asTuple();
-
         return Panache.withTransaction(()-> responseUniTuples.onItem()
                 .ifNotNull().transform(entity -> BaseSearchResponse.builder()
                         .data(entity.getItem1())
