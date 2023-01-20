@@ -75,13 +75,14 @@ public class Product extends PanacheEntityBase {
                 .onFailure().transform(t -> new IllegalStateException(t));
     }
 
-    public static Uni<List<Product>> getAllProducts(){
+    public static Uni<List<PanacheEntityBase>> getAllProducts(){
         log.info("list product");
         return Product
                 .listAll(Sort.by("createdAt"))
                 .ifNoItem().after(Duration.ofMillis(10000))
                 .fail().onFailure()
-                .recoverWithUni(Uni.createFrom().<List<PanacheEntityBase>>item(Collections.EMPTY_LIST));
+                .recoverWithUni(Uni.createFrom()
+                	.<List<PanacheEntityBase>>item(Collections.EMPTY_LIST));
     }
 
     public static Uni<Boolean> deleteProduct(Long id){

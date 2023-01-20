@@ -1,11 +1,11 @@
 quarkus:
   http:
-    port: 8081
+    port: 8080
   log:
     level: INFO
-#  hibernate-orm:
-#    database:
-#      generation: drop-and-create
+  hibernate-orm:
+    database:
+      generation: drop-and-create
     log:
       sql: true
     dialect: org.hibernate.dialect.PostgreSQL10Dialect
